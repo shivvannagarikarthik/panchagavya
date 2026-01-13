@@ -1,13 +1,30 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
+import { getProductByIdFirestore } from '@/lib/products';
 
-export default function ProductDetailClient({ product }) {
+export default function ProductDetailClient({ product: initialProduct }) {
     const { addToCart } = useCart();
+    const [product, setProduct] = useState(initialProduct);
     const [quantity, setQuantity] = useState(1);
     const [addedToCart, setAddedToCart] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        const fetchProduct = async () => {
+            if (initialProduct?.id) {
+                setIsLoading(true);
+                const firestoreProduct = await getProductByIdFirestore(initialProduct.id);
+                if (firestoreProduct) {
+                    setProduct(firestoreProduct);
+                }
+                setIsLoading(false);
+            }
+        };
+        fetchProduct();
+    }, [initialProduct]);
 
     if (!product) {
         return (

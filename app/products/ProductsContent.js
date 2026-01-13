@@ -5,22 +5,40 @@ import { useSearchParams } from 'next/navigation';
 import ProductCard from '@/components/ProductCard';
 import CategoryFilter from '@/components/CategoryFilter';
 import SearchBar from '@/components/SearchBar';
-import { products, categories, getProductsByCategory, searchProducts } from '@/lib/products';
+import { products as staticProducts, categories, getProductsByCategory, searchProducts, getProductsFirestore } from '@/lib/products';
 
 export default function ProductsContent() {
     const searchParams = useSearchParams();
     const categoryParam = searchParams.get('category');
 
     const [selectedCategory, setSelectedCategory] = useState('all');
-    const [displayedProducts, setDisplayedProducts] = useState(products);
+    const [allProducts, setAllProducts] = useState(staticProducts);
+    const [displayedProducts, setDisplayedProducts] = useState(staticProducts);
     const [searchQuery, setSearchQuery] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            setIsLoading(true);
+            const firestoreProducts = await getProductsFirestore();
+            if (firestoreProducts.length > 0) {
+                setAllProducts(firestoreProducts);
+                setDisplayedProducts(firestoreProducts);
+            }
+            setIsLoading(false);
+        };
+        fetchProducts();
+    }, []);
 
     useEffect(() => {
         if (categoryParam) {
             setSelectedCategory(categoryParam);
-            setDisplayedProducts(getProductsByCategory(categoryParam));
+            const filtered = categoryParam === 'all'
+                ? allProducts
+                : allProducts.filter(p => p.category === categoryParam);
+            setDisplayedProducts(filtered);
         }
-    }, [categoryParam]);
+    }, [categoryParam, allProducts]);
 
     const handleCategoryChange = (category) => {
         setSelectedCategory(category);
@@ -64,7 +82,11 @@ export default function ProductsContent() {
                 />
 
                 {/* Products Grid */}
-                {displayedProducts.length > 0 ? (
+                {isLoading ? (
+                    <div className="text-center" style={{ padding: 'var(--spacing-3xl)' }}>
+                        <p style={{ fontSize: '1.2rem', color: 'var(--color-primary)' }}>Loading products...</p>
+                    </div>
+                ) : displayedProducts.length > 0 ? (
                     <div className="grid grid-3">
                         {displayedProducts.map(product => (
                             <ProductCard key={product.id} product={product} />

@@ -1,0 +1,31 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow public read for products and educational content
+    match /products/{product} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.email == 'karthik2942001@gmail.com';
+    }
+    
+    match /usageGuides/{guide} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.email == 'karthik2942001@gmail.com';
+    }
+    
+    match /benefits/{benefit} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.email == 'karthik2942001@gmail.com';
+    }
+    
+    match /faqs/{faq} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.email == 'karthik2942001@gmail.com';
+    }
+
+    // Orders require authentication to read/write their own
+    match /orders/{order} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
