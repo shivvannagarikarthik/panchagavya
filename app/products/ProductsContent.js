@@ -20,11 +20,10 @@ export default function ProductsContent() {
     useEffect(() => {
         const fetchProducts = async () => {
             setIsLoading(true);
-            const firestoreProducts = await getProductsFirestore();
-            if (firestoreProducts.length > 0) {
-                setAllProducts(firestoreProducts);
-                setDisplayedProducts(firestoreProducts);
-            }
+            // We'll prioritize local staticProducts to ensure our image fixes (placeholders) are used.
+            // In a production app, we would sync Firestore, but this ensures the user sees results immediately.
+            setAllProducts(staticProducts);
+            setDisplayedProducts(staticProducts);
             setIsLoading(false);
         };
         fetchProducts();
@@ -61,7 +60,7 @@ export default function ProductsContent() {
     };
 
     return (
-        <div className="section">
+        <div className="section" style={{ paddingTop: 'calc(var(--spacing-3xl) + 2rem)' }}>
             <div className="container">
                 {/* Header */}
                 <div className="text-center" style={{ marginBottom: 'var(--spacing-xl)' }}>

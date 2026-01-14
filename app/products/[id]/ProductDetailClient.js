@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
 import { getProductByIdFirestore } from '@/lib/products';
 
@@ -63,13 +64,27 @@ export default function ProductDetailClient({ product: initialProduct }) {
                     <div>
                         <div className="card" style={{
                             height: '400px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontSize: '8rem',
+                            position: 'relative',
+                            overflow: 'hidden',
                             background: 'var(--color-surface)'
                         }}>
-                            🌿
+                            {product.image ? (
+                                <Image
+                                    src={product.image}
+                                    alt={product.name}
+                                    fill
+                                    style={{ objectFit: 'cover' }}
+                                    priority
+                                />
+                            ) : (
+                                <div style={{
+                                    height: '100%',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontSize: '8rem'
+                                }}>🌿</div>
+                            )}
                         </div>
 
                         {/* Certifications */}

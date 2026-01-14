@@ -32,11 +32,25 @@ export default function ProductCard({ product }) {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: '4rem',
                     cursor: 'pointer'
                 }}>
-                    {/* Placeholder - will be replaced with actual images */}
-                    🌿
+                    {product.image ? (
+                        <Image
+                            src={product.image}
+                            alt={product.name}
+                            fill
+                            style={{ objectFit: 'cover' }}
+                            priority
+                        />
+                    ) : (
+                        <div style={{
+                            height: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '8rem'
+                        }}>🌿</div>
+                    )}
                     <div style={{
                         position: 'absolute',
                         top: 'var(--spacing-sm)',
@@ -46,7 +60,8 @@ export default function ProductCard({ product }) {
                         padding: '4px 8px',
                         borderRadius: 'var(--radius-sm)',
                         fontSize: '0.75rem',
-                        fontWeight: 'bold'
+                        fontWeight: 'bold',
+                        zIndex: 1
                     }}>
                         {product.category}
                     </div>

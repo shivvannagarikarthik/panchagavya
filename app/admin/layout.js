@@ -10,11 +10,13 @@ export default function AdminLayout({ children }) {
     const router = useRouter();
     const pathname = usePathname();
 
+    const normalizedPath = pathname.replace(/\/$/, '');
+
     useEffect(() => {
-        if (!loading && !user && pathname !== '/admin/login') {
+        if (!loading && !user && normalizedPath !== '/admin/login') {
             router.push('/admin/login');
         }
-    }, [user, loading, pathname, router]);
+    }, [user, loading, normalizedPath, router]);
 
     const handleLogout = async () => {
         try {
@@ -36,7 +38,7 @@ export default function AdminLayout({ children }) {
     }
 
     // If we're on the login page, just show the login page content
-    if (pathname === '/admin/login') {
+    if (normalizedPath === '/admin/login') {
         return <>{children}</>;
     }
 

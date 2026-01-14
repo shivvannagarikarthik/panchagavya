@@ -14,7 +14,8 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
         }
 
         // Basic admin check - in a real app, this would check a 'role' field in Firestore
-        if (!loading && adminOnly && user && user.email !== 'karthik2942001@gmail.com') {
+        const adminEmails = ['karthik2942001@gmail.com', 'admin@panchagavya.com'];
+        if (!loading && adminOnly && user && !adminEmails.includes(user.email)) {
             router.push('/');
         }
     }, [user, loading, router, adminOnly]);

@@ -3,6 +3,7 @@
         "rules": "firestore.rules"
     },
     "hosting": {
+        "site": "panchagavya",
         "public": "out",
         "ignore": [
             "firebase.json",
