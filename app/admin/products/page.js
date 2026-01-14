@@ -30,7 +30,8 @@ export default function ProductManager() {
     // Check Admin Auth
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if (user && user.email === 'karthik2942001@gmail.com') {
+            const adminEmails = ['karthik2942001@gmail.com', 'admin@panchagavya.com'];
+            if (user && adminEmails.includes(user.email)) {
                 setIsAdmin(true);
             } else {
                 // Optional: Redirect if not admin, but ProtectedRoute should handle this globally
