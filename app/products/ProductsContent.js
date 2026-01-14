@@ -13,6 +13,11 @@ export default function ProductsContent() {
 
     const effectiveCategory = categoryParam || 'all';
 
+    const [allProducts, setAllProducts] = useState(staticProducts);
+    const [displayedProducts, setDisplayedProducts] = useState(staticProducts);
+    const [isLoading, setIsLoading] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+
     useEffect(() => {
         const fetchProducts = async () => {
             setIsLoading(true);
