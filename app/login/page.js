@@ -43,8 +43,14 @@ export default function LoginPage() {
             await googleSignIn();
             router.push('/');
         } catch (err) {
-            setError('Failed to sign in with Google.');
             console.error(err);
+            if (err.code === 'auth/popup-closed-by-user') {
+                setError('Login popup was closed before finishing. Please try again.');
+            } else if (err.code === 'auth/unauthorized-domain') {
+                setError('This domain is not authorized in Firebase. Please add your domain to the Firebase Console.');
+            } else {
+                setError(err.message || 'Failed to sign in with Google.');
+            }
         }
     };
 
