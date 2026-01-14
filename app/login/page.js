@@ -22,8 +22,16 @@ export default function LoginPage() {
             await login(email, password);
             router.push('/');
         } catch (err) {
-            setError('Failed to login. Please check your credentials.');
             console.error(err);
+            if (err.code === 'auth/user-not-found') {
+                setError('No account found with this email. Please sign up first.');
+            } else if (err.code === 'auth/wrong-password') {
+                setError('Incorrect password. Please try again.');
+            } else if (err.code === 'auth/invalid-email') {
+                setError('Please enter a valid email address.');
+            } else {
+                setError(err.message || 'Failed to login. Please check your credentials.');
+            }
         } finally {
             setLoading(false);
         }
