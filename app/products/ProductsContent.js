@@ -5,7 +5,9 @@ import { useSearchParams } from 'next/navigation';
 import ProductCard from '@/components/ProductCard';
 import CategoryFilter from '@/components/CategoryFilter';
 import SearchBar from '@/components/SearchBar';
-import { products as staticProducts, categories, getProductsByCategory, searchProducts, getProductsFirestore } from '@/lib/products';
+import { products as staticProducts, categories, searchProducts } from '@/lib/products';
+import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 export default function ProductsContent() {
     const searchParams = useSearchParams();
@@ -15,59 +17,64 @@ export default function ProductsContent() {
 
     const [allProducts, setAllProducts] = useState(staticProducts);
     const [displayedProducts, setDisplayedProducts] = useState(staticProducts);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
 
+    // Fetch from Firestore
     useEffect(() => {
-        const fetchProducts = async () => {
-            setIsLoading(true);
-            setAllProducts(staticProducts);
+        const q = query(collection(db, 'products'), orderBy('id', 'asc')); // Try to keep older consistent
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const productsData = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+
+            if (productsData.length > 0) {
+                // Sort by numericId if available
+                const sorted = productsData.sort((a, b) => (Number(a.numericId) || 0) - (Number(b.numericId) || 0));
+                setAllProducts(sorted);
+            }
             setIsLoading(false);
-        };
-        fetchProducts();
+        }, (error) => {
+            console.error("Error fetching products:", error);
+            setIsLoading(false);
+        });
+        return () => unsubscribe();
     }, []);
 
+    // Filter Logic
     useEffect(() => {
-        const filtered = effectiveCategory === 'all'
-            ? allProducts
-            : allProducts.filter(p => p.category === effectiveCategory);
+        let filtered = [...allProducts];
+
+        if (effectiveCategory !== 'all') {
+            filtered = filtered.filter(p => p.category === effectiveCategory);
+        }
+
+        if (searchQuery) {
+            const query = searchQuery.toLowerCase();
+            filtered = filtered.filter(p =>
+                p.name.toLowerCase().includes(query) ||
+                (p.description && p.description.toLowerCase().includes(query))
+            );
+        }
+
         setDisplayedProducts(filtered);
-    }, [effectiveCategory, allProducts]);
+    }, [effectiveCategory, allProducts, searchQuery]);
 
     const handleCategoryChange = (category) => {
         setSearchQuery('');
-        // Update URL instead of just local state
         const params = new URLSearchParams(window.location.search);
         params.set('category', category);
         window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
-
-        const filtered = category === 'all'
-            ? allProducts
-            : allProducts.filter(p => p.category === category);
-        setDisplayedProducts(filtered);
     };
 
     const handleSearch = (query) => {
         setSearchQuery(query);
-        if (query.trim() === '') {
-            const filtered = effectiveCategory === 'all'
-                ? allProducts
-                : allProducts.filter(p => p.category === effectiveCategory);
-            setDisplayedProducts(filtered);
-        } else {
-            const results = searchProducts(query);
-            setDisplayedProducts(
-                effectiveCategory === 'all'
-                    ? results
-                    : results.filter(p => p.category === effectiveCategory)
-            );
-        }
     };
 
     return (
         <div className="section" style={{ paddingTop: 'calc(var(--spacing-3xl) + 2rem)' }}>
             <div className="container">
-                {/* Header */}
                 <div className="text-center" style={{ marginBottom: 'var(--spacing-xl)' }}>
                     <h1>Our Products</h1>
                     <p style={{ fontSize: '1.1rem', color: 'var(--color-text-light)', maxWidth: '700px', margin: '0 auto' }}>
@@ -75,17 +82,14 @@ export default function ProductsContent() {
                     </p>
                 </div>
 
-                {/* Search */}
                 <SearchBar onSearch={handleSearch} placeholder="Search products by name, category, or description..." />
 
-                {/* Category Filter */}
                 <CategoryFilter
                     selectedCategory={effectiveCategory}
                     onCategoryChange={handleCategoryChange}
                     categories={categories}
                 />
 
-                {/* Products Grid */}
                 {isLoading ? (
                     <div className="text-center" style={{ padding: 'var(--spacing-3xl)' }}>
                         <p style={{ fontSize: '1.2rem', color: 'var(--color-primary)' }}>Loading products...</p>

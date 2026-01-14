@@ -1,10 +1,9 @@
 import Link from 'next/link';
-import ProductCard from '@/components/ProductCard';
-import { products } from '@/lib/products';
+import FeaturedProducts from '@/components/FeaturedProducts';
 
 export default function Home() {
   // Get featured products (first 6)
-  const featuredProducts = products.slice(0, 6);
+  // Featured products handled by Client Component
 
   return (
     <>
@@ -159,12 +158,7 @@ export default function Home() {
               Discover our most popular Panchagavya products
             </p>
           </div>
-          <div className="grid grid-3">
-            {featuredProducts.map(product => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-          <div style={{ textAlign: 'center', marginTop: 'var(--spacing-xl)' }}>
+          <FeaturedProducts />          <div style={{ textAlign: 'center', marginTop: 'var(--spacing-xl)' }}>
             <Link href="/products" className="btn btn-primary" style={{
               fontSize: '1.1rem',
               padding: 'var(--spacing-md) var(--spacing-xl)'

@@ -20,7 +20,7 @@ export default function ProductCard({ product }) {
             flexDirection: 'column'
         }}>
             {/* Product Image */}
-            <Link href={`/products/${product.id}`}>
+            <Link href={`/product?id=${product.id}`}>
                 <div style={{
                     position: 'relative',
                     width: '100%',
@@ -70,7 +70,7 @@ export default function ProductCard({ product }) {
 
             {/* Product Info */}
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                <Link href={`/products/${product.id}`} style={{ textDecoration: 'none' }}>
+                <Link href={`/product?id=${product.id}`} style={{ textDecoration: 'none' }}>
                     <h4 style={{
                         fontSize: '1.1rem',
                         marginBottom: 'var(--spacing-xs)',
@@ -120,7 +120,7 @@ export default function ProductCard({ product }) {
                     </div>
 
                     <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
-                        <Link href={`/products/${product.id}`} className="btn btn-outline" style={{
+                        <Link href={`/product?id=${product.id}`} className="btn btn-outline" style={{
                             padding: 'var(--spacing-xs) var(--spacing-md)',
                             fontSize: '0.9rem'
                         }}>
