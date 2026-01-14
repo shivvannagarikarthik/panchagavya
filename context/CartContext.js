@@ -12,7 +12,14 @@ export function CartProvider({ children }) {
     useEffect(() => {
         const savedCart = localStorage.getItem('panchagavya-cart');
         if (savedCart) {
-            setCart(JSON.parse(savedCart));
+            try {
+                const parsed = JSON.parse(savedCart);
+                if (Array.isArray(parsed)) {
+                    setCart(parsed);
+                }
+            } catch (e) {
+                console.error('Failed to parse cart from localStorage', e);
+            }
         }
         setIsLoaded(true);
     }, []);

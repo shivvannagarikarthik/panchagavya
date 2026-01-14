@@ -11,50 +11,50 @@ export default function ProductsContent() {
     const searchParams = useSearchParams();
     const categoryParam = searchParams.get('category');
 
-    const [selectedCategory, setSelectedCategory] = useState('all');
-    const [allProducts, setAllProducts] = useState(staticProducts);
-    const [displayedProducts, setDisplayedProducts] = useState(staticProducts);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [isLoading, setIsLoading] = useState(true);
+    const effectiveCategory = categoryParam || 'all';
 
     useEffect(() => {
         const fetchProducts = async () => {
             setIsLoading(true);
-            // We'll prioritize local staticProducts to ensure our image fixes (placeholders) are used.
-            // In a production app, we would sync Firestore, but this ensures the user sees results immediately.
             setAllProducts(staticProducts);
-            setDisplayedProducts(staticProducts);
             setIsLoading(false);
         };
         fetchProducts();
     }, []);
 
     useEffect(() => {
-        if (categoryParam) {
-            setSelectedCategory(categoryParam);
-            const filtered = categoryParam === 'all'
-                ? allProducts
-                : allProducts.filter(p => p.category === categoryParam);
-            setDisplayedProducts(filtered);
-        }
-    }, [categoryParam, allProducts]);
+        const filtered = effectiveCategory === 'all'
+            ? allProducts
+            : allProducts.filter(p => p.category === effectiveCategory);
+        setDisplayedProducts(filtered);
+    }, [effectiveCategory, allProducts]);
 
     const handleCategoryChange = (category) => {
-        setSelectedCategory(category);
         setSearchQuery('');
-        setDisplayedProducts(getProductsByCategory(category));
+        // Update URL instead of just local state
+        const params = new URLSearchParams(window.location.search);
+        params.set('category', category);
+        window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
+
+        const filtered = category === 'all'
+            ? allProducts
+            : allProducts.filter(p => p.category === category);
+        setDisplayedProducts(filtered);
     };
 
     const handleSearch = (query) => {
         setSearchQuery(query);
         if (query.trim() === '') {
-            setDisplayedProducts(getProductsByCategory(selectedCategory));
+            const filtered = effectiveCategory === 'all'
+                ? allProducts
+                : allProducts.filter(p => p.category === effectiveCategory);
+            setDisplayedProducts(filtered);
         } else {
             const results = searchProducts(query);
             setDisplayedProducts(
-                selectedCategory === 'all'
+                effectiveCategory === 'all'
                     ? results
-                    : results.filter(p => p.category === selectedCategory)
+                    : results.filter(p => p.category === effectiveCategory)
             );
         }
     };
@@ -75,7 +75,7 @@ export default function ProductsContent() {
 
                 {/* Category Filter */}
                 <CategoryFilter
-                    selectedCategory={selectedCategory}
+                    selectedCategory={effectiveCategory}
                     onCategoryChange={handleCategoryChange}
                     categories={categories}
                 />

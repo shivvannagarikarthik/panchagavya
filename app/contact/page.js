@@ -36,7 +36,7 @@ export default function ContactPage() {
                 <div className="text-center" style={{ marginBottom: 'var(--spacing-3xl)' }}>
                     <h1>Contact Us</h1>
                     <p style={{ fontSize: '1.1rem', color: 'var(--color-text-light)', maxWidth: '700px', margin: '0 auto' }}>
-                        Have questions about our products? Need expert advice? We're here to help!
+                        Have questions about our products? Need expert advice? We&apos;re here to help!
                     </p>
                 </div>
 
@@ -56,7 +56,7 @@ export default function ContactPage() {
                                 }}>
                                     <div style={{ fontSize: '3rem', marginBottom: 'var(--spacing-md)' }}>✓</div>
                                     <h4 style={{ color: 'white' }}>Thank you!</h4>
-                                    <p>Your message has been sent. We'll get back to you within 24 hours.</p>
+                                    <p>Your message has been sent. We&apos;ll get back to you within 24 hours.</p>
                                 </div>
                             ) : (
                                 <form onSubmit={handleSubmit}>
@@ -179,7 +179,7 @@ export default function ContactPage() {
                                 Ayurvedic practitioners are available for consultation.
                             </p>
                             <p style={{ fontSize: '0.9rem', color: 'var(--color-text-light)' }}>
-                                Select "Consult Expert" in the form subject to schedule a consultation.
+                                Select &quot;Consult Expert&quot; in the form subject to schedule a consultation.
                             </p>
                         </div>
 

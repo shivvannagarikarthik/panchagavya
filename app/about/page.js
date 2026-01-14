@@ -15,7 +15,7 @@ export default function AboutPage() {
                     <div>
                         <h2 style={{ marginBottom: 'var(--spacing-lg)' }}>Our Story</h2>
                         <p style={{ lineHeight: 1.8, marginBottom: 'var(--spacing-md)' }}>
-                            PanchaGavya Store was founded with a vision to revive the ancient Indian tradition of using cow-based products for agriculture, health, and spiritual well-being. Panchagavya, meaning "five cow products" (milk, curd, ghee, urine, and dung), has been mentioned in our ancient scriptures for thousands of years.
+                            PanchaGavya Store was founded with a vision to revive the ancient Indian tradition of using cow-based products for agriculture, health, and spiritual well-being. Panchagavya, meaning &quot;five cow products&quot; (milk, curd, ghee, urine, and dung), has been mentioned in our ancient scriptures for thousands of years.
                         </p>
                         <p style={{ lineHeight: 1.8, marginBottom: 'var(--spacing-md)' }}>
                             We work directly with certified Gaushalas (cow sanctuaries) that follow traditional practices and maintain indigenous A2 cow breeds. Our products are made using time-tested Ayurvedic formulations combined with modern quality control standards.

@@ -23,7 +23,7 @@ export default function Home() {
               marginBottom: 'var(--spacing-lg)',
               textShadow: '2px 2px 4px rgba(0,0,0,0.2)'
             }}>
-              Embrace Nature's Wisdom with Panchagavya
+              Embrace Nature&apos;s Wisdom with Panchagavya
             </h1>
             <p style={{
               fontSize: '1.25rem',

@@ -32,7 +32,7 @@ export default function ProductDetailClient({ product: initialProduct }) {
             <div className="section">
                 <div className="container text-center">
                     <h1>Product Not Found</h1>
-                    <p>The product you're looking for doesn't exist.</p>
+                    <p>The product you&apos;re looking for doesn&apos;t exist.</p>
                     <Link href="/products" className="btn btn-primary mt-3">
                         Back to Products
                     </Link>
