@@ -23,12 +23,14 @@ export default function LoginPage() {
             router.push('/');
         } catch (err) {
             console.error(err);
-            if (err.code === 'auth/user-not-found') {
-                setError('No account found with this email. Please sign up first.');
+            if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
+                setError('Invalid email or password. Please try again or sign up for a new account.');
             } else if (err.code === 'auth/wrong-password') {
                 setError('Incorrect password. Please try again.');
             } else if (err.code === 'auth/invalid-email') {
                 setError('Please enter a valid email address.');
+            } else if (err.code === 'auth/too-many-requests') {
+                setError('Too many failed attempts. Please try again later or reset your password.');
             } else {
                 setError(err.message || 'Failed to login. Please check your credentials.');
             }
